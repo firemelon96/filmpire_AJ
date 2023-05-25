@@ -1,12 +1,13 @@
 import { CssBaseline } from '@mui/material';
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+// import SearchAppBar from './NavBar/SearchAppBar';
+import ResponsiveDrawer from './Drawer/Drawer';
 
 function Root() {
   return (
-    <div>
+    <>
       <CssBaseline />
-      <nav>
+      {/* <nav>
         <ul>
           <li>
             <NavLink to={'/'}>Home</NavLink>
@@ -21,10 +22,11 @@ function Root() {
             <NavLink to={'/movie-information'}>Movie Information</NavLink>
           </li>
         </ul>
-      </nav>
-
-      <Outlet />
-    </div>
+      </nav> */}
+      <ResponsiveDrawer />
+      {/* 
+      <Outlet /> */}
+    </>
   );
 }
 
