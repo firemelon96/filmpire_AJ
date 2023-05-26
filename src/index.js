@@ -6,7 +6,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
-import App from './components/App';
+// import App from './components/App';
 import Root from './components/Root';
 import Actors from './components/Actors/Actors';
 import Movies from './components/Movies/Movies';
@@ -19,8 +19,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
-        <Route index element={<App />} />
-        <Route path='/movies' element={<Movies />} />
+        <Route index element={<Movies />} />
+        {/* <Route path='/movies' element={<Movies />} /> */}
         <Route path='/actors' element={<Actors />} />
         <Route path='/movie-information' element={<MovieInformation />} />
       </Route>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,12 +16,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Outlet } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
-import { Search, SearchIconWrapper, StyledInputBase } from './styles';
 import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
-import { useGetGenresQuery } from '../../services/TMDB';
 import genreIcons from '../../assets/genres';
+import SearchInput from '../Search/Search';
+
+import { useGetGenresQuery } from '../../services/TMDB';
+import { useDispatch } from 'react-redux';
+import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 
 const drawerWidth = 240;
 const settings = ['Profile', 'My Movie', 'Logout'];
@@ -46,12 +47,12 @@ function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { data, isLoading } = useGetGenresQuery();
+  const dispatch = useDispatch();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  console.log(data);
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -71,7 +72,11 @@ function ResponsiveDrawer(props) {
       <Divider />
       <List>
         {movieCategory.map(({ label, value }) => (
-          <ListItem key={value} disablePadding>
+          <ListItem
+            key={value}
+            disablePadding
+            onClick={() => dispatch(selectGenreOrCategory(value))}
+          >
             <ListItemButton>
               <ListItemIcon>
                 <img src={genreIcons[label.toLowerCase()]} height={30} />
@@ -90,7 +95,11 @@ function ResponsiveDrawer(props) {
         <List>
           <ListSubheader>Genres</ListSubheader>
           {data.genres.map(({ name, id }) => (
-            <ListItem key={id} disablePadding>
+            <ListItem
+              key={id}
+              disablePadding
+              onClick={() => dispatch(selectGenreOrCategory(id))}
+            >
               <ListItemButton>
                 <ListItemIcon>
                   <img src={genreIcons[name.toLowerCase()]} height={30} />
@@ -135,15 +144,7 @@ function ResponsiveDrawer(props) {
           >
             Responsive drawer
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder='Search…'
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          <SearchInput />
           <Box sx={{ flexGrow: 0, ml: 2 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -227,13 +228,5 @@ function ResponsiveDrawer(props) {
     </Box>
   );
 }
-
-ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
 
 export default ResponsiveDrawer;
