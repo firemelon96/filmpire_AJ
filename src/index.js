@@ -14,15 +14,16 @@ import MovieInformation from './components/MovieInformation/MovieInformation';
 import { Provider } from 'react-redux';
 import store from './App/store';
 import ErrorPage from './components/ErrorPage';
+import Profile from './components/Profile/Profile';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Movies />} />
-        {/* <Route path='/movies' element={<Movies />} /> */}
-        <Route path='/actors' element={<Actors />} />
-        <Route path='/movie-information' element={<MovieInformation />} />
+        <Route path='/profile/:id' element={<Profile />} />
+        <Route path='/actors/:id' element={<Actors />} />
+        <Route path='/movie/:id' element={<MovieInformation />} />
       </Route>
     </Route>
   )

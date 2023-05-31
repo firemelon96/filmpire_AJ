@@ -1,32 +1,36 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import ListSubheader from '@mui/material/ListSubheader';
-import CircularProgress from '@mui/material/CircularProgress';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import React, { useEffect, useState } from 'react';
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Divider,
+  Drawer,
+  IconButton,
+  ListSubheader,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+  Button,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { Outlet } from 'react-router-dom';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
-import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
+import { AccountCircle } from '@mui/icons-material';
+import { NavLink, Outlet } from 'react-router-dom';
 import genreIcons from '../../assets/genres';
 import SearchInput from '../Search/Search';
 
 import { useGetGenresQuery } from '../../services/TMDB';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
+import { createSessionId, fetchToken, moviesApi } from '../../utils';
+import { setUser, userSelector } from '../../features/auth';
 
 const drawerWidth = 240;
-const settings = ['Profile', 'My Movie', 'Logout'];
 
 const movieCategory = [
   { label: 'Popular', value: 'popular' },
@@ -44,28 +48,54 @@ const movieCategory = [
 
 function ResponsiveDrawer(props) {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { isAuthenticated, user } = useSelector(userSelector);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const { data, isLoading } = useGetGenresQuery();
   const dispatch = useDispatch();
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  console.log(user);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prev) => !prev);
   };
 
+  const token = localStorage.getItem('request_token');
+  const sessionIdFromLocalStorage = localStorage.getItem('session_id');
+
+  useEffect(() => {
+    const logInUser = async () => {
+      if (token) {
+        if (sessionIdFromLocalStorage) {
+          const { data: userData } = await moviesApi.get(
+            `/account?session_id=${sessionIdFromLocalStorage}`
+          );
+          dispatch(setUser(userData));
+        } else {
+          const sessionId = await createSessionId();
+          const { data: userData } = await moviesApi.get(
+            `/account?session_id=${sessionId}`
+          );
+
+          dispatch(setUser(userData));
+        }
+      }
+    };
+
+    logInUser();
+  }, []);
+
   const drawer = (
     <div>
       <Toolbar>
         <LocalMoviesIcon sx={{ mr: 1 }} />
-        <Typography variant='h6' noWrap component='div' textAlign='center'>
+        <Typography
+          variant='h5'
+          noWrap
+          component={NavLink}
+          textAlign='center'
+          to='/'
+          sx={{ textDecoration: 'none' }}
+        >
           FILMPIRE
         </Typography>
       </Toolbar>
@@ -145,35 +175,26 @@ function ResponsiveDrawer(props) {
             Responsive drawer
           </Typography>
           <SearchInput />
-          <Box sx={{ flexGrow: 0, ml: 2 }}>
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {/* {console.log(!isAuthenticated)} */}
+          {isAuthenticated && (
+            <Box sx={{ flexGrow: 0, ml: 2 }}>
+              <Button
+                color='inherit'
+                component={NavLink}
+                to={`/profile/${user.id}`}
+                onClick={() => {}}
+              >
+                MY MOVIES
+              </Button>
+            </Box>
+          )}
+          {!isAuthenticated && (
+            <Box sx={{ flexGrow: 0, ml: 2 }}>
+              <Button color='inherit' onClick={fetchToken}>
+                Login &nbsp; <AccountCircle />
+              </Button>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
       <Box
