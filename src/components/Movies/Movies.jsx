@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import { useGetMoviesQuery } from '../../services/TMDB';
 import MovieList from '../MovieList/MovieList';
 import { useSelector } from 'react-redux';
+import PaginationBtn from '../Pagination/Pagination';
 // import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 
 function Movies() {
-  const page = 1;
-  // const [page, setPage] = useState(1);
+  // const page = 1;
+  const [page, setPage] = useState(1);
   const { genreIdOrCategoryName, searchQuery } = useSelector(
     (state) => state.currentGenreOrCategory
   );
@@ -17,6 +18,8 @@ function Movies() {
     searchQuery,
   });
 
+  console.log(data);
+
   if (isLoading) {
     return (
       <Box display='flex' justifyContent='center'>
@@ -25,7 +28,18 @@ function Movies() {
     );
   }
 
-  return <MovieList movies={data} />;
+  return (
+    <div>
+      <MovieList movies={data} />
+      <Box display='flex' justifyContent='center'>
+        <PaginationBtn
+          currentPage={page}
+          setPage={setPage}
+          totalPage={data.total_pages}
+        />
+      </Box>
+    </div>
+  );
 }
 
 export default Movies;

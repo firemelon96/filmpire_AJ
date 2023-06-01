@@ -268,7 +268,7 @@ function MovieInformation() {
           </Grid>
         </Grid>
       </Grid>
-      <Box marginTop='5rem' width='100%'>
+      <Grid item marginTop='5rem' width='100%'>
         <Typography variant='h3' gutterBottom align='center'>
           You might also like
         </Typography>
@@ -277,7 +277,7 @@ function MovieInformation() {
         ) : (
           <Box>Sorry nothing is found</Box>
         )}
-      </Box>
+      </Grid>
       <Modal
         closeAfterTransition
         open={open}
