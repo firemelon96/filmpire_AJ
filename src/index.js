@@ -15,6 +15,7 @@ import { Provider } from 'react-redux';
 import store from './App/store';
 import ErrorPage from './components/ErrorPage';
 import Profile from './components/Profile/Profile';
+import './index.css';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   useGetActorQuery,
   useGetMoviesByActorIdQuery,
-  useGetRecommendationQuery,
 } from '../../services/TMDB';
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  CircularProgress,
-  Grid,
-  Typography,
-} from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import MovieList from '../MovieList/MovieList';
 import { ArrowBack } from '@mui/icons-material';
 import PaginationBtn from '../Pagination/Pagination';
@@ -23,6 +15,7 @@ function Actors() {
   const [page, setPage] = useState(1);
   const { data: moviesByActors } = useGetMoviesByActorIdQuery({ id, page });
   console.log(moviesByActors);
+  const navigate = useNavigate();
 
   if (isLoading) {
     <Box display='flex' justifyContent='center'>
@@ -87,7 +80,7 @@ function Actors() {
           </Button>
           <Button
             startIcon={<ArrowBack />}
-            onClick={() => history.goBack()}
+            onClick={() => navigate(-1)}
             color='primary'
           >
             BACK

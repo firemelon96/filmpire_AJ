@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   Typography,
@@ -7,9 +7,7 @@ import {
   Grid,
   Box,
   CircularProgress,
-  useMediaQuery,
   Rating,
-  Paper,
 } from '@mui/material';
 import {
   Movie,
@@ -21,32 +19,85 @@ import {
   Remove,
   ArrowBack,
 } from '@mui/icons-material';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import {
+  useGetListQuery,
   useGetMovieQuery,
   useGetRecommendationQuery,
 } from '../../services/TMDB';
 import genreIcons from '../../assets/genres';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import MovieList from '../MovieList/MovieList';
+import axios from 'axios';
+import { userSelector } from '../../features/auth';
 
 function MovieInformation() {
+  const { user } = useSelector(userSelector);
   const { id } = useParams();
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isWatchlisted, setIsWatchlisted] = useState(false);
+
+  const { data: favoriteMovies } = useGetListQuery({
+    listName: 'favorite/movies',
+    accountId: user.id,
+    sessionId: localStorage.getItem('session_id'),
+    page: 1,
+  });
+  const { data: watchlistMovies } = useGetListQuery({
+    listName: 'watchlist/movies',
+    accountId: user.id,
+    sessionId: localStorage.getItem('session_id'),
+    page: 1,
+  });
   const { data, isLoading, isError } = useGetMovieQuery(id);
-  const { data: recommendations, isLoading: recommendationIsLoading } =
-    useGetRecommendationQuery({ list: '/recommendations', movie_id: id });
+  const { data: recommendations } = useGetRecommendationQuery({
+    list: '/recommendations',
+    movie_id: id,
+  });
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const isFavorited = true;
-  const isWatchlisted = true;
+  useEffect(() => {
+    setIsFavorited(
+      !!favoriteMovies?.results?.find((movie) => movie?.id === data?.id)
+    );
+  }, [favoriteMovies, data]);
 
-  console.log(recommendations);
+  useEffect(() => {
+    setIsWatchlisted(
+      !!watchlistMovies?.results?.find((movie) => movie?.id === data?.id)
+    );
+  }, [watchlistMovies, data]);
 
-  const addtoFav = () => {};
-  const addtoWatchlist = () => {};
+  const addtoFav = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${
+        process.env.REACT_APP_TMDB_KEY
+      }&session_id=${localStorage.getItem('session_id')}`,
+      {
+        media_type: 'movie',
+        media_id: id,
+        favorite: !isFavorited,
+      }
+    );
+
+    setIsFavorited((prev) => !prev);
+  };
+  const addtoWatchlist = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/watchlist?api_key=${
+        process.env.REACT_APP_TMDB_KEY
+      }&session_id=${localStorage.getItem('session_id')}`,
+      {
+        media_type: 'movie',
+        media_id: id,
+        watchlist: !isWatchlisted,
+      }
+    );
+    setIsWatchlisted((prev) => !prev);
+  };
 
   if (isLoading) {
     return (
@@ -202,13 +253,12 @@ function MovieInformation() {
         <Grid item container sx={{ marginTop: '2rem' }}>
           <Grid
             item
-            xs={12}
-            sm={6}
+            lg={6}
+            sm={12}
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
               width: '100%',
-              flexDirection: { sm: 'column' },
             }}
           >
             <ButtonGroup size='medium' variant='outlined'>
@@ -237,7 +287,7 @@ function MovieInformation() {
               </Button>
             </ButtonGroup>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item lg={6} sm={12}>
             <ButtonGroup size='medium' variant='outlined'>
               <Button
                 onClick={addtoFav}
@@ -253,10 +303,8 @@ function MovieInformation() {
               >
                 Watchlist
               </Button>
-              <Button endIcon={<ArrowBack />}>
+              <Button endIcon={<ArrowBack />} onClick={() => navigate(-1)}>
                 <Typography
-                  component={NavLink}
-                  to='/'
                   color='inherit'
                   variant='subtitle2'
                   sx={{ textDecoration: 'none' }}

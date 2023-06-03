@@ -38,14 +38,6 @@ const movieCategory = [
   { label: 'Upcoming', value: 'upcoming' },
 ];
 
-// const movieGenre = [
-//   { name: 'Action', value: 'action' },
-//   { name: 'Comedy', value: 'comedy' },
-//   { name: 'Drama', value: 'drama' },
-//   { name: 'Horror', value: 'horror' },
-//   { name: 'Thriller', value: 'thriller' },
-// ];
-
 function ResponsiveDrawer(props) {
   const { window } = props;
   const { isAuthenticated, user } = useSelector(userSelector);
@@ -82,7 +74,7 @@ function ResponsiveDrawer(props) {
     };
 
     logInUser();
-  }, []);
+  }, [token, sessionIdFromLocalStorage]);
 
   const drawer = (
     <div>

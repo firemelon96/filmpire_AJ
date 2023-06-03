@@ -2,16 +2,6 @@ import React from 'react';
 import { Grid, Grow, CardMedia, Rating, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { NavLink } from 'react-router-dom';
-// import { experimentalStyled as styled } from '@mui/material/styles';
-// import Paper from '@mui/material/Paper';
-
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(2),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-// }));
 
 function Movie({ movie, i }) {
   return (

@@ -4,10 +4,8 @@ import { useGetMoviesQuery } from '../../services/TMDB';
 import MovieList from '../MovieList/MovieList';
 import { useSelector } from 'react-redux';
 import PaginationBtn from '../Pagination/Pagination';
-// import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 
 function Movies() {
-  // const page = 1;
   const [page, setPage] = useState(1);
   const { genreIdOrCategoryName, searchQuery } = useSelector(
     (state) => state.currentGenreOrCategory
@@ -17,8 +15,6 @@ function Movies() {
     page,
     searchQuery,
   });
-
-  console.log(data);
 
   if (isLoading) {
     return (
