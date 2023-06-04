@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Modal,
   Typography,
@@ -31,12 +31,15 @@ import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import MovieList from '../MovieList/MovieList';
 import axios from 'axios';
 import { userSelector } from '../../features/auth';
+import { ColorModeContext } from '../../utils/ToggleColorMode';
 
 function MovieInformation() {
   const { user } = useSelector(userSelector);
   const { id } = useParams();
   const [isFavorited, setIsFavorited] = useState(false);
   const [isWatchlisted, setIsWatchlisted] = useState(false);
+
+  const colorMode = useContext(ColorModeContext);
 
   const { data: favoriteMovies } = useGetListQuery({
     listName: 'favorite/movies',
@@ -199,7 +202,10 @@ function MovieInformation() {
                 component='img'
                 src={genreIcons[genre.name.toLowerCase()]}
                 height={30}
-                sx={{ marginRight: '10px' }}
+                sx={{
+                  marginRight: '10px',
+                  filter: colorMode.mode === 'dark' && 'invert(1)',
+                }}
               />
               <Typography color='textPrimary' variant='subtitle1'>
                 {genre?.name}

@@ -16,6 +16,7 @@ import store from './App/store';
 import ErrorPage from './components/ErrorPage';
 import Profile from './components/Profile/Profile';
 import './index.css';
+import ToggleColorMode from './utils/ToggleColorMode';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,7 +34,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <ToggleColorMode>
+        <RouterProvider router={router} />
+      </ToggleColorMode>
     </Provider>
   </React.StrictMode>
 );

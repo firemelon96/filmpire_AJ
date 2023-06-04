@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
-import { AccountCircle } from '@mui/icons-material';
+import { AccountCircle, Brightness4, Brightness7 } from '@mui/icons-material';
 import { NavLink, Outlet } from 'react-router-dom';
 import genreIcons from '../../assets/genres';
 import SearchInput from '../Search/Search';
@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import { createSessionId, fetchToken, moviesApi } from '../../utils';
 import { setUser, userSelector } from '../../features/auth';
+import { ColorModeContext } from '../../utils/ToggleColorMode';
 
 const drawerWidth = 240;
 
@@ -45,7 +46,9 @@ function ResponsiveDrawer(props) {
 
   const { data, isLoading } = useGetGenresQuery();
   const dispatch = useDispatch();
-  console.log(user);
+
+  const colorMode = useContext(ColorModeContext);
+  console.log(colorMode);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prev) => !prev);
@@ -101,7 +104,14 @@ function ResponsiveDrawer(props) {
           >
             <ListItemButton>
               <ListItemIcon>
-                <img src={genreIcons[label.toLowerCase()]} height={30} />
+                <Box
+                  component='img'
+                  src={genreIcons[label.toLowerCase()]}
+                  height={30}
+                  sx={{
+                    filter: colorMode.mode === 'dark' && 'invert(1)',
+                  }}
+                />
               </ListItemIcon>
               <ListItemText primary={label} />
             </ListItemButton>
@@ -124,7 +134,14 @@ function ResponsiveDrawer(props) {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <img src={genreIcons[name.toLowerCase()]} height={30} />
+                  <Box
+                    component='img'
+                    src={genreIcons[name.toLowerCase()]}
+                    height={30}
+                    sx={{
+                      filter: colorMode.mode === 'dark' && 'invert(1)',
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText primary={name} />
               </ListItemButton>
@@ -158,14 +175,13 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
+          <IconButton
+            color='inherit'
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            onClick={colorMode.toggleColorMode}
           >
-            Responsive drawer
-          </Typography>
+            {colorMode.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
           <SearchInput />
           {/* {console.log(!isAuthenticated)} */}
           {isAuthenticated && (
