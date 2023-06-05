@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, useMediaQuery } from '@mui/material';
 import { useGetMoviesQuery } from '../../services/TMDB';
 import MovieList from '../MovieList/MovieList';
 import { useSelector } from 'react-redux';
 import PaginationBtn from '../Pagination/Pagination';
+import FeaturedMovie from '../FeatureMovie/FeaturedMovie';
 
 function Movies() {
   const [page, setPage] = useState(1);
@@ -16,6 +17,9 @@ function Movies() {
     searchQuery,
   });
 
+  const lg = useMediaQuery((theme) => theme.breakpoints.only('lg'));
+  const numberOfMovies = lg ? 17 : 19;
+
   if (isLoading) {
     return (
       <Box display='flex' justifyContent='center'>
@@ -26,7 +30,8 @@ function Movies() {
 
   return (
     <div>
-      <MovieList movies={data} />
+      <FeaturedMovie movie={data.results[0]} />
+      <MovieList movies={data} numberOfMovies={numberOfMovies} excludeFirst />
       <Box display='flex' justifyContent='center'>
         <PaginationBtn
           currentPage={page}
