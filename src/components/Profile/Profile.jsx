@@ -5,9 +5,11 @@ import { userSelector } from '../../features/auth';
 import { ExitToApp } from '@mui/icons-material';
 import { useGetListQuery } from '../../services/TMDB';
 import RatedCard from '../RatedCard/RatedCard';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
-  const { user } = useSelector(userSelector);
+  const { isAuthenticated, user } = useSelector(userSelector);
+  const navigate = useNavigate();
 
   const { data: favoriteMovies, refetch: fetchFavoriteMovie } = useGetListQuery(
     {
@@ -37,14 +39,18 @@ function Profile() {
 
   return (
     <Box>
-      <Box display='flex' justifyContent='space-between'>
-        <Typography variant='h4' gutterBottom>
-          My Profile - {user.username}
-        </Typography>
-        <Button color='inherit' onClick={logout}>
-          Logout &nbsp; <ExitToApp />
-        </Button>
-      </Box>
+      {isAuthenticated ? (
+        <Box display='flex' justifyContent='space-between'>
+          <Typography variant='h4' gutterBottom>
+            My Profile - {user.username}
+          </Typography>
+          <Button color='inherit' onClick={logout}>
+            Logout &nbsp; <ExitToApp />
+          </Button>
+        </Box>
+      ) : (
+        navigate('/')
+      )}
       {!favoriteMovies?.results?.length && !watchlistMovies?.results?.length ? (
         <Typography variant='h5'>
           Add favorite or watchlist some movies to see them here!

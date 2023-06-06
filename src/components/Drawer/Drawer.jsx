@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -16,6 +16,7 @@ import {
   Toolbar,
   Typography,
   Button,
+  Avatar,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
@@ -41,18 +42,26 @@ const movieCategory = [
 
 function ResponsiveDrawer(props) {
   const { window } = props;
+
+  const alanBtnRef = useRef();
   const { isAuthenticated, user } = useSelector(userSelector);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { genreIdOrCategoryName } = useSelector(
+    (state) => state.currentGenreOrCategory
+  );
 
   const { data, isLoading } = useGetGenresQuery();
   const dispatch = useDispatch();
 
   const colorMode = useContext(ColorModeContext);
-  console.log(colorMode);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [genreIdOrCategoryName]);
 
   const token = localStorage.getItem('request_token');
   const sessionIdFromLocalStorage = localStorage.getItem('session_id');
@@ -67,17 +76,17 @@ function ResponsiveDrawer(props) {
           dispatch(setUser(userData));
         } else {
           const sessionId = await createSessionId();
+          if (!sessionId) return;
           const { data: userData } = await moviesApi.get(
             `/account?session_id=${sessionId}`
           );
-
           dispatch(setUser(userData));
         }
       }
     };
 
     logInUser();
-  }, [token, sessionIdFromLocalStorage]);
+  }, [token]);
 
   const drawer = (
     <div>
@@ -177,7 +186,7 @@ function ResponsiveDrawer(props) {
           </IconButton>
           <IconButton
             color='inherit'
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{ flexGrow: 1 }}
             onClick={colorMode.toggleColorMode}
           >
             {colorMode.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
@@ -192,7 +201,18 @@ function ResponsiveDrawer(props) {
                 to={`/profile/${user.id}`}
                 onClick={() => {}}
               >
-                MY MOVIES
+                <Typography
+                  sx={{
+                    display: { xs: 'none', md: 'flex' },
+                  }}
+                >
+                  MY MOVIES &nbsp;
+                </Typography>
+                <Avatar
+                  sx={{ width: 30, height: 30 }}
+                  alt='profile'
+                  src={`https://www.themoviedb.org/t/p/w64_and_h64_face${user?.avatar?.tmdb?.avatar_path}`}
+                />
               </Button>
             </Box>
           )}
@@ -253,6 +273,8 @@ function ResponsiveDrawer(props) {
       >
         <Toolbar />
         <Outlet />
+
+        <div ref={alanBtnRef} />
       </Box>
     </Box>
   );

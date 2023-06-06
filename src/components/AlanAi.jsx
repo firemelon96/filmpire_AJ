@@ -52,6 +52,7 @@ function useAlanAi() {
         }
 
         if (command === 'search') {
+          navigate('/');
           dispatch(searchMovie(query));
         }
       },

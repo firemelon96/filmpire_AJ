@@ -44,7 +44,7 @@ export const createSessionId = async () => {
 
       return session_id;
     } catch (error) {
-      console.log(' create token error ', error);
+      console.log('💥💥⛔ create session error ', error);
     }
   }
 };
