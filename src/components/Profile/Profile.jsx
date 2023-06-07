@@ -41,7 +41,7 @@ function Profile() {
     <Box>
       {isAuthenticated ? (
         <Box display='flex' justifyContent='space-between'>
-          <Typography variant='h4' gutterBottom>
+          <Typography variant='h5' gutterBottom>
             My Profile - {user.username}
           </Typography>
           <Button color='inherit' onClick={logout}>

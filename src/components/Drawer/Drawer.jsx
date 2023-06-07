@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
-import { AccountCircle, Brightness4, Brightness7 } from '@mui/icons-material';
+import { Brightness4, Brightness7 } from '@mui/icons-material';
 import { NavLink, Outlet } from 'react-router-dom';
 import genreIcons from '../../assets/genres';
 import SearchInput from '../Search/Search';
@@ -219,7 +219,7 @@ function ResponsiveDrawer(props) {
           {!isAuthenticated && (
             <Box sx={{ flexGrow: 0, ml: 2 }}>
               <Button color='inherit' onClick={fetchToken}>
-                Login &nbsp; <AccountCircle />
+                Login
               </Button>
             </Box>
           )}
@@ -267,8 +267,8 @@ function ResponsiveDrawer(props) {
         component='main'
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          p: 2,
+          width: { sm: `calc(100% - ${drawerWidth}px)`, xs: '100%' },
         }}
       >
         <Toolbar />

@@ -256,18 +256,15 @@ function MovieInformation() {
               )
               .slice(0, 6)}
         </Grid>
-        <Grid item container sx={{ marginTop: '2rem' }}>
-          <Grid
-            item
-            lg={6}
-            sm={12}
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-            }}
-          >
-            <ButtonGroup size='medium' variant='outlined'>
+        <Grid
+          container
+          sx={{
+            marginTop: '2rem',
+            justifyContent: { md: 'space-between', xs: 'center' },
+          }}
+        >
+          <Grid item lg={6} sm={12}>
+            <ButtonGroup size='small' variant='outlined'>
               <Button
                 target='_blank'
                 rel='noopener noreferrer'
@@ -294,7 +291,7 @@ function MovieInformation() {
             </ButtonGroup>
           </Grid>
           <Grid item lg={6} sm={12}>
-            <ButtonGroup size='medium' variant='outlined'>
+            <ButtonGroup size='small' variant='outlined'>
               <Button
                 onClick={addtoFav}
                 endIcon={

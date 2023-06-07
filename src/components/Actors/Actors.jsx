@@ -82,9 +82,7 @@ function Actors() {
             startIcon={<ArrowBack />}
             onClick={() => navigate(-1)}
             color='primary'
-          >
-            BACK
-          </Button>
+          ></Button>
         </Box>
       </Grid>
       <Grid item marginTop='5rem' width='100%'>
