@@ -29,7 +29,7 @@ function Movies() {
   }
 
   return (
-    <div>
+    <>
       <FeaturedMovie movie={data.results[0]} />
       <MovieList movies={data} numberOfMovies={numberOfMovies} excludeFirst />
       <Box display='flex' justifyContent='center'>
@@ -39,7 +39,7 @@ function Movies() {
           totalPage={data.total_pages}
         />
       </Box>
-    </div>
+    </>
   );
 }
 

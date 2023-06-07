@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Divider } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../features/auth';
 import { ExitToApp } from '@mui/icons-material';
@@ -57,7 +57,9 @@ function Profile() {
         </Typography>
       ) : (
         <>
+          <Divider />
           <RatedCard title='Favorite Movies' data={favoriteMovies} />
+          <Divider sx={{ marginTop: '15px' }} />
           <RatedCard title='Watchlist Movies' data={watchlistMovies} />
         </>
       )}

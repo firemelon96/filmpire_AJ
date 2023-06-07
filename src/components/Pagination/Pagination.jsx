@@ -6,7 +6,7 @@ function PaginationBtn({ currentPage, setPage, totalPage }) {
     setPage(value);
   };
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} marginTop={5}>
       <Pagination
         count={totalPage}
         page={currentPage}

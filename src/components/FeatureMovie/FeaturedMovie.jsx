@@ -17,7 +17,7 @@ function FeaturedMovie({ movie }) {
     >
       <Card
         sx={{
-          width: '100%',
+          width: 'auto',
           display: 'flex',
           justifyContent: 'flex-end',
           flexDirection: 'column',

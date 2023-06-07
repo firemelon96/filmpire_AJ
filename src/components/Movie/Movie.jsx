@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 function Movie({ movie, i }) {
   return (
-    <Grid sx={{ textAlign: 'center' }} item xs={12} sm={6} md={4} lg={3} xl={2}>
+    <Grid item xs={12} sm={6} md={4} lg={3} xl={2} sx={{ textAlign: 'center' }}>
       <Grow in key={i} timeout={(i + 1) * 250}>
         <NavLink to={`/movie/${movie.id}`}>
           <CardMedia

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 
-import Movie from '../Movie/Movie';
+// import Movie from '../Movie/Movie';
+import MovieCard from '../Movie/MovieCard';
 
 function RatedCard({ title, data }) {
   return (
@@ -9,11 +10,11 @@ function RatedCard({ title, data }) {
       <Typography variant='h5' gutterBottom>
         {title}
       </Typography>
-      <Box display='flex' flexWrap='wrap'>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
         {data?.results.map((movie, i) => (
-          <Movie key={movie.id} movie={movie} i={i} />
+          <MovieCard key={movie.id} movie={movie} i={i} />
         ))}
-      </Box>
+      </Grid>
     </>
   );
 }

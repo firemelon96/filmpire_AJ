@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import alanBtn from '@alan-ai/alan-sdk-web';
 import { ColorModeContext } from '../utils/ToggleColorMode';
 import { fetchToken } from '../utils';
@@ -8,6 +8,10 @@ import {
   selectGenreOrCategory,
 } from '../features/currentGenreOrCategory';
 import { useNavigate } from 'react-router-dom';
+<link
+  href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'
+  rel='stylesheet'
+></link>;
 
 function useAlanAi() {
   const { setMode } = useContext(ColorModeContext);
@@ -16,7 +20,7 @@ function useAlanAi() {
 
   useEffect(() => {
     alanBtn({
-      key: '0c2ff15f35138b3fcd82cf8ff7960acf2e956eca572e1d8b807a3e2338fdd0dc/stage',
+      key: '7e180e4e0bc194cdcd82cf8ff7960acf2e956eca572e1d8b807a3e2338fdd0dc/stage',
       onCommand: ({ command, mode, genres, genreOrCategory, query }) => {
         if (command === 'chooseGenre') {
           const foundGenre = genres.find(
